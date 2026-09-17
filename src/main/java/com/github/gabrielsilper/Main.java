@@ -20,5 +20,9 @@ public class Main {
 
         // 3.4 – Os funcionários receberam 10% de aumento de salário, atualizar a lista de funcionários com novo valor.
         funcionarioService.aumentarSalarioFuncionarios(10);
+
+        // 3.5 – Agrupar os funcionários por função em um MAP, sendo a chave a “função” e o valor a “lista de funcionários”.
+        // 3.6 – Imprimir os funcionários, agrupados por função.
+        funcionarioService.imprimirFuncionarioPorFuncao();
     }
 }

@@ -3,14 +3,15 @@ package com.github.gabrielsilper.service;
 import com.github.gabrielsilper.model.Funcionario;
 import com.github.gabrielsilper.repository.FuncionarioRepository;
 
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 public class FuncionarioService {
     private final FuncionarioRepository funcionarioRepository;
+    private final DateTimeFormatter dtFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private final Locale brLocale = Locale.of("pt", "BR");
+    private final NumberFormat numberFormat = NumberFormat.getCurrencyInstance(brLocale);
 
     public FuncionarioService(FuncionarioRepository funcionarioRepository) {
         this.funcionarioRepository = funcionarioRepository;
@@ -25,18 +26,9 @@ public class FuncionarioService {
     }
 
     public void imprimirFuncionarios() {
-        DateTimeFormatter dtFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        Locale brLocale = Locale.of("pt", "BR");
-        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(brLocale);
-
-        this.listarFuncionarios().forEach( funcionario -> {
-            System.out.printf("Funcionário: %s, Data de nascimento: %s, Salário: %s, Função: %s%n",
-                    funcionario.getNome(),
-                    funcionario.getDataNascimento().format(dtFormatter),
-                    numberFormat.format(funcionario.getSalario()),
-                    funcionario.getFuncao()
-            );
-        });
+        System.out.println("Lista de funcionários:");
+        this.listarFuncionarios().forEach(this::imprimirFuncionario);
+        System.out.println("\n");
     }
 
     public void aumentarSalarioFuncionarios(int percentual) {
@@ -45,5 +37,26 @@ public class FuncionarioService {
         }
 
         funcionarioRepository.aumentarSalarioFuncionarios(percentual);
+    }
+
+    public void imprimirFuncionarioPorFuncao() {
+        Map<String, List<Funcionario>> funcionariosPorFuncao = this.funcionarioRepository.listarFuncionariosPorFuncao();
+
+        System.out.println("Lista de funcionários por função:");
+        for (Map.Entry<String, List<Funcionario>> entry : funcionariosPorFuncao.entrySet()) {
+            System.out.println("Função - " + entry.getKey() + ":");
+            entry.getValue().forEach(this::imprimirFuncionario);
+            System.out.println("----------------------------");
+        }
+        System.out.println("\n");
+    }
+
+    private void imprimirFuncionario(Funcionario funcionario) {
+        System.out.printf("- Funcionário: %s, Data de nascimento: %s, Salário: %s, Função: %s%n",
+                funcionario.getNome(),
+                funcionario.getDataNascimento().format(this.dtFormatter),
+                this.numberFormat.format(funcionario.getSalario()),
+                funcionario.getFuncao()
+        );
     }
 }

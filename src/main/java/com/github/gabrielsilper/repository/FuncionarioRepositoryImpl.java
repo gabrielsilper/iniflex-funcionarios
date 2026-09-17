@@ -5,7 +5,9 @@ import com.github.gabrielsilper.model.Funcionario;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FuncionarioRepositoryImpl implements FuncionarioRepository {
     private final ArrayList<Funcionario> funcionarios = new ArrayList<>(List.of(
@@ -24,6 +26,23 @@ public class FuncionarioRepositoryImpl implements FuncionarioRepository {
     @Override
     public List<Funcionario> listarFuncionarios() {
         return this.funcionarios;
+    }
+
+    @Override
+    public Map<String, List<Funcionario>> listarFuncionariosPorFuncao() {
+        Map<String, List<Funcionario>> funcionariosPorFuncao = new HashMap<>();
+
+        for (Funcionario funcionario : this.listarFuncionarios()) {
+            if (funcionariosPorFuncao.containsKey(funcionario.getFuncao())) {
+                funcionariosPorFuncao.get(funcionario.getFuncao()).add(funcionario);
+            } else {
+                List<Funcionario> funcionarios = new ArrayList<>();
+                funcionarios.add(funcionario);
+                funcionariosPorFuncao.put(funcionario.getFuncao(), funcionarios);
+            }
+        }
+
+        return funcionariosPorFuncao;
     }
 
     @Override
