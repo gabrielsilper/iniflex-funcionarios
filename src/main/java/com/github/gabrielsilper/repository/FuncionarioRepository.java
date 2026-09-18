@@ -10,7 +10,7 @@ public interface FuncionarioRepository {
     List<Funcionario> listarFuncionarios();
     Map<String, List<Funcionario>> listarFuncionariosPorFuncao();
     void removerFuncionarioPorNome(String nome);
-    void aumentarSalarioFuncionarios(int percentual);
+    void atualizarSalarioFuncionarios(int percentual);
     List<Funcionario> listarFuncionariosPorMesAniversario(int... meses);
     Funcionario getFuncionarioMaisVelho();
     List<Funcionario> listarFuncionariosOrdenadosPorNome();

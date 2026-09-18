@@ -37,7 +37,7 @@ public class FuncionarioService {
             System.out.println("Percentual inválido. Por favor, insira um valor maior que 0.");
         }
 
-        funcionarioRepository.aumentarSalarioFuncionarios(percentual);
+        funcionarioRepository.atualizarSalarioFuncionarios(percentual);
     }
 
     public List<Funcionario> listarFuncionariosPorMesesAniversaio(int... meses) {

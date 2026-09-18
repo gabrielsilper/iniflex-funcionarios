@@ -57,7 +57,7 @@ public class FuncionarioRepositoryImpl implements FuncionarioRepository {
     }
 
     @Override
-    public void aumentarSalarioFuncionarios(int percentual) {
+    public void atualizarSalarioFuncionarios(int percentual) {
         // salario = salario * (1 + (percentual / 100))
         funcionarios.forEach(funcionario -> {
             BigDecimal percentualDecimal = BigDecimal.valueOf(1 + (percentual / 100.0));
@@ -68,15 +68,21 @@ public class FuncionarioRepositoryImpl implements FuncionarioRepository {
 
     @Override
     public List<Funcionario> listarFuncionariosPorMesAniversario(int... meses) {
-        return this.funcionarios.stream().filter(funcionario -> {
-            int mesAniversario = funcionario.getDataNascimento().getMonthValue();
-            for (int mes : meses) {
-                if (mes == mesAniversario) {
-                    return true;
-                }
-            }
-            return false;
-        }).toList();
+        return this.funcionarios.stream()
+                .filter(Objects::nonNull)
+                .filter(funcionario -> {
+                    if (funcionario.getDataNascimento() == null) {
+                        return false;
+                    }
+
+                    int mesAniversario = funcionario.getDataNascimento().getMonthValue();
+                    for (int mes : meses) {
+                        if (mes == mesAniversario) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }).toList();
     }
 
     @Override
