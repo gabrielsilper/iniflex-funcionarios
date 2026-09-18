@@ -12,4 +12,5 @@ public interface FuncionarioRepository {
     void aumentarSalarioFuncionarios(int percentual);
     List<Funcionario> listarFuncionariosPorMesAniversario(int... meses);
     Funcionario getFuncionarioMaisVelho();
+    List<Funcionario> listarFuncionariosOrdenadosPorNome();
 }

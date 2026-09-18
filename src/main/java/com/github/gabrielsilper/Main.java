@@ -30,5 +30,8 @@ public class Main {
 
         // 3.9 – Imprimir o funcionário com a maior idade, exibir os atributos: nome e idade.
         funcionarioService.imprimirFuncionarioMaisVelho();
+
+        // 3.10 – Imprimir a lista de funcionários por ordem alfabética.
+        funcionarioService.imprimirFuncionariosOrdenadosPorNome();
     }
 }

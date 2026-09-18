@@ -55,6 +55,10 @@ public class FuncionarioService {
         return new NomeIdadeFuncionarioDTO(funcionarioMaisVelho.getNome(), idade);
     }
 
+    public List<Funcionario> listarFuncionariosOrdenadosPorNome() {
+        return this.funcionarioRepository.listarFuncionariosOrdenadosPorNome();
+    }
+
     public void imprimirFuncionariosPorMesesAniversario(int... meses) {
         System.out.println("Funcionários que fazem aniversário no mês " + Arrays.toString(meses) + ":");
         this.listarFuncionariosPorMesesAniversaio(meses).forEach(this::imprimirFuncionario);
@@ -88,6 +92,12 @@ public class FuncionarioService {
             System.out.println("Nome: " + nomeIdadeFuncionarioMaisVelho.nome());
             System.out.println("Idade: " + nomeIdadeFuncionarioMaisVelho.idade());
         }
+        System.out.println("\n");
+    }
+
+    public void imprimirFuncionariosOrdenadosPorNome() {
+        System.out.println("Lista de funcionários ordenada por nome:");
+        this.listarFuncionariosOrdenadosPorNome().forEach(this::imprimirFuncionario);
         System.out.println("\n");
     }
 

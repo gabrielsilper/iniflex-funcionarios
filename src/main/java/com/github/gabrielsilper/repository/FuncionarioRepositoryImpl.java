@@ -1,6 +1,7 @@
 package com.github.gabrielsilper.repository;
 
 import com.github.gabrielsilper.model.Funcionario;
+import com.github.gabrielsilper.model.Pessoa;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -99,5 +100,19 @@ public class FuncionarioRepositoryImpl implements FuncionarioRepository {
         }
 
         return funcionarioMaisVelho;
+    }
+
+    @Override
+    public List<Funcionario> listarFuncionariosOrdenadosPorNome() {
+        return this.funcionarios.stream()
+                .sorted(
+                        Comparator.nullsLast(
+                                Comparator.comparing(
+                                        Pessoa::getNome,
+                                        Comparator.nullsLast(Comparator.naturalOrder())
+                                )
+                        )
+                )
+                .toList();
     }
 }
