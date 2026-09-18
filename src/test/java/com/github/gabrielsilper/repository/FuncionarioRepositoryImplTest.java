@@ -171,4 +171,71 @@ public class FuncionarioRepositoryImplTest {
         assertThat(funcionariosAniversariantes).hasSize(1);
         assertThat(funcionariosAniversariantes).contains(maria);
     }
+
+    @Test
+    public void deveRetornarNullQuandoNaoHaFuncionariosNaLista() {
+        FuncionarioRepositoryImpl repository = new FuncionarioRepositoryImpl(new ArrayList<>());
+
+        assertThat(repository.getFuncionarioMaisVelho()).isNull();
+    }
+
+    @Test
+    public void deveRetornarFuncionarioMaisVelhoComDatasValidas() {
+        Funcionario maria = new Funcionario("Maria", LocalDate.of(2000, 10, 18), BigDecimal.valueOf(2009.44), "Operador");
+        Funcionario joao = new Funcionario("João", LocalDate.of(1990, 5, 12), BigDecimal.valueOf(2284.38), "Operador");
+
+        ArrayList<Funcionario> funcionarios = new ArrayList<>();
+        funcionarios.add(maria);
+        funcionarios.add(joao);
+
+        FuncionarioRepositoryImpl repository = new FuncionarioRepositoryImpl(funcionarios);
+
+        assertThat(repository.getFuncionarioMaisVelho()).isEqualTo(joao);
+    }
+
+    @Test
+    public void deveIgnorarFuncionariosNulosAoBuscarFuncionarioMaisVelho() {
+        Funcionario maria = new Funcionario("Maria", LocalDate.of(2000, 10, 18), BigDecimal.valueOf(2009.44), "Operador");
+        Funcionario joao = new Funcionario("João", LocalDate.of(1990, 5, 12), BigDecimal.valueOf(2284.38), "Operador");
+
+        ArrayList<Funcionario> funcionarios = new ArrayList<>();
+        funcionarios.add(null);
+        funcionarios.add(maria);
+        funcionarios.add(joao);
+
+        FuncionarioRepositoryImpl repository = new FuncionarioRepositoryImpl(funcionarios);
+
+        assertThat(repository.getFuncionarioMaisVelho()).isEqualTo(joao);
+    }
+
+    @Test
+    public void devePreferirFuncionarioComDataNascimentoQuandoAtualMaisVelhoNaoTemData() {
+        Funcionario semData = new Funcionario("Sem Data", null, BigDecimal.valueOf(1500.00), "Operador");
+        Funcionario maria = new Funcionario("Maria", LocalDate.of(2000, 10, 18), BigDecimal.valueOf(2009.44), "Operador");
+        Funcionario joao = new Funcionario("João", LocalDate.of(1990, 5, 12), BigDecimal.valueOf(2284.38), "Operador");
+
+        ArrayList<Funcionario> funcionarios = new ArrayList<>();
+        funcionarios.add(semData);
+        funcionarios.add(maria);
+        funcionarios.add(joao);
+
+        FuncionarioRepositoryImpl repository = new FuncionarioRepositoryImpl(funcionarios);
+
+        assertThat(repository.getFuncionarioMaisVelho()).isEqualTo(joao);
+    }
+
+    @Test
+    public void deveRetornarPrimeiroFuncionarioQuandoTodosNaoTemDataNascimento() {
+        Funcionario semData1 = new Funcionario("Sem Data 1", null, BigDecimal.valueOf(1500.00), "Operador");
+        Funcionario semData2 = new Funcionario("Sem Data 2", null, BigDecimal.valueOf(1700.00), "Operador");
+
+        ArrayList<Funcionario> funcionarios = new ArrayList<>();
+        funcionarios.add(semData1);
+        funcionarios.add(semData2);
+
+        FuncionarioRepositoryImpl repository = new FuncionarioRepositoryImpl(funcionarios);
+
+        assertThat(repository.getFuncionarioMaisVelho()).isEqualTo(semData1);
+    }
+
 }
