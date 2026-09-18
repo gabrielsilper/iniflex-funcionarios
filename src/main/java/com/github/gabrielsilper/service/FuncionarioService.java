@@ -4,6 +4,7 @@ import com.github.gabrielsilper.dto.NomeIdadeFuncionarioDTO;
 import com.github.gabrielsilper.model.Funcionario;
 import com.github.gabrielsilper.repository.FuncionarioRepository;
 
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.Period;
@@ -59,6 +60,10 @@ public class FuncionarioService {
         return this.funcionarioRepository.listarFuncionariosOrdenadosPorNome();
     }
 
+    public BigDecimal getTotalSalarios() {
+        return this.funcionarioRepository.getTotalSalarios();
+    }
+
     public void imprimirFuncionariosPorMesesAniversario(int... meses) {
         System.out.println("Funcionários que fazem aniversário no mês " + Arrays.toString(meses) + ":");
         this.listarFuncionariosPorMesesAniversaio(meses).forEach(this::imprimirFuncionario);
@@ -99,6 +104,11 @@ public class FuncionarioService {
         System.out.println("Lista de funcionários ordenada por nome:");
         this.listarFuncionariosOrdenadosPorNome().forEach(this::imprimirFuncionario);
         System.out.println("\n");
+    }
+
+    public void imprimirTotalSalarios() {
+        System.out.println("Total dos salários dos Funcionários: "
+                + this.numberFormat.format(this.getTotalSalarios()) + "\n");
     }
 
     private void imprimirFuncionario(Funcionario funcionario) {

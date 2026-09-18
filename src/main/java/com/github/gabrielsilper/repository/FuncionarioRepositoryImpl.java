@@ -115,4 +115,13 @@ public class FuncionarioRepositoryImpl implements FuncionarioRepository {
                 )
                 .toList();
     }
+
+    @Override
+    public BigDecimal getTotalSalarios() {
+        return this.funcionarios.stream()
+                .filter(Objects::nonNull)
+                .map(Funcionario::getSalario)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 }

@@ -33,5 +33,8 @@ public class Main {
 
         // 3.10 – Imprimir a lista de funcionários por ordem alfabética.
         funcionarioService.imprimirFuncionariosOrdenadosPorNome();
+
+        // 3.11 – Imprimir o total dos salários dos funcionários.
+        funcionarioService.imprimirTotalSalarios();
     }
 }
