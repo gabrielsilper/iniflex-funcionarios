@@ -11,4 +11,5 @@ public interface FuncionarioRepository {
     void removerFuncionarioPorNome(String nome);
     void aumentarSalarioFuncionarios(int percentual);
     List<Funcionario> listarFuncionariosPorMesAniversario(int... meses);
+    Funcionario getFuncionarioMaisVelho();
 }

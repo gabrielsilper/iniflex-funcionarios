@@ -1,9 +1,12 @@
 package com.github.gabrielsilper.service;
 
+import com.github.gabrielsilper.dto.NomeIdadeFuncionarioDTO;
 import com.github.gabrielsilper.model.Funcionario;
 import com.github.gabrielsilper.repository.FuncionarioRepository;
 
 import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -51,9 +54,40 @@ public class FuncionarioService {
         System.out.println("\n");
     }
 
+    public List<Funcionario> listarFuncionariosPorMesesAniversaio(int... meses) {
+        return this.funcionarioRepository.listarFuncionariosPorMesAniversario(meses);
+    }
+
     public void imprimirFuncionariosPorMesesAniversario(int... meses) {
         System.out.println("Funcionários que fazem aniversário no mês " + Arrays.toString(meses) + ":");
-        this.funcionarioRepository.listarFuncionariosPorMesAniversario(meses).forEach(this::imprimirFuncionario);
+        this.listarFuncionariosPorMesesAniversaio(meses).forEach(this::imprimirFuncionario);
+        System.out.println("\n");
+    }
+
+    public NomeIdadeFuncionarioDTO getNomeIdadeFuncionarioMaisVelho() {
+        Funcionario funcionarioMaisVelho = this.funcionarioRepository.getFuncionarioMaisVelho();
+        if (funcionarioMaisVelho == null) {
+            return null;
+        }
+
+        if (funcionarioMaisVelho.getDataNascimento() == null) {
+            return new NomeIdadeFuncionarioDTO(funcionarioMaisVelho.getNome(), -1);
+        }
+
+        int idade = Period.between(funcionarioMaisVelho.getDataNascimento(), LocalDate.now()).getYears();
+
+        return new NomeIdadeFuncionarioDTO(funcionarioMaisVelho.getNome(), idade);
+    }
+
+    public void imprimirFuncionarioMaisVelho() {
+        NomeIdadeFuncionarioDTO nomeIdadeFuncionarioMaisVelho = this.getNomeIdadeFuncionarioMaisVelho();
+        if (nomeIdadeFuncionarioMaisVelho == null) {
+            System.out.println("Não existe funcionário mais velho.");
+        } else {
+            System.out.println("Funcionário mais velho:");
+            System.out.println("Nome: " + nomeIdadeFuncionarioMaisVelho.nome());
+            System.out.println("Idade: " + nomeIdadeFuncionarioMaisVelho.idade());
+        }
         System.out.println("\n");
     }
 

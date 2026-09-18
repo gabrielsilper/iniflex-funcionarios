@@ -27,5 +27,8 @@ public class Main {
 
         // 3.8 – Imprimir os funcionários que fazem aniversário no mês 10 e 12.
         funcionarioService.imprimirFuncionariosPorMesesAniversario(10, 12);
+
+        // 3.9 – Imprimir o funcionário com a maior idade, exibir os atributos: nome e idade.
+        funcionarioService.imprimirFuncionarioMaisVelho();
     }
 }

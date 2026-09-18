@@ -4,10 +4,7 @@ import com.github.gabrielsilper.model.Funcionario;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class FuncionarioRepositoryImpl implements FuncionarioRepository {
     private final ArrayList<Funcionario> funcionarios = new ArrayList<>(List.of(
@@ -71,5 +68,36 @@ public class FuncionarioRepositoryImpl implements FuncionarioRepository {
             }
             return false;
         }).toList();
+    }
+
+    @Override
+    public Funcionario getFuncionarioMaisVelho() {
+        Funcionario funcionarioMaisVelho = null;
+
+        for (Funcionario funcionario : this.funcionarios) {
+            if (funcionario == null) {
+                continue;
+            }
+
+            if (funcionarioMaisVelho == null) {
+                funcionarioMaisVelho = funcionario;
+                continue;
+            }
+
+            if (funcionarioMaisVelho.getDataNascimento() == null && funcionario.getDataNascimento() == null) {
+                continue;
+            }
+
+            if (funcionarioMaisVelho.getDataNascimento() == null && funcionario.getDataNascimento() != null) {
+                funcionarioMaisVelho = funcionario;
+                continue;
+            }
+
+            if (funcionario.getDataNascimento().isBefore(funcionarioMaisVelho.getDataNascimento())) {
+                funcionarioMaisVelho = funcionario;
+            }
+        }
+
+        return funcionarioMaisVelho;
     }
 }
