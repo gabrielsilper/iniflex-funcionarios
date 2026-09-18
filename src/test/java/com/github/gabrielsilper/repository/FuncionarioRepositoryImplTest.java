@@ -238,4 +238,61 @@ public class FuncionarioRepositoryImplTest {
         assertThat(repository.getFuncionarioMaisVelho()).isEqualTo(semData1);
     }
 
+    @Test
+    public void deveRetornarListaVaziaQuandoNaoHaFuncionariosOrdenadosPorNome() {
+        FuncionarioRepositoryImpl repository = new FuncionarioRepositoryImpl(new ArrayList<>());
+
+        assertThat(repository.listarFuncionariosOrdenadosPorNome()).isEmpty();
+    }
+
+    @Test
+    public void deveOrdenarFuncionariosPorNomeEmOrdemAlfabetica() {
+        Funcionario maria = new Funcionario("Maria", LocalDate.of(2000, 10, 18), BigDecimal.valueOf(2009.44), "Operador");
+        Funcionario joao = new Funcionario("João", LocalDate.of(1990, 5, 12), BigDecimal.valueOf(2284.38), "Operador");
+        Funcionario alice = new Funcionario("Alice", LocalDate.of(1995, 1, 5), BigDecimal.valueOf(2234.68), "Recepcionista");
+
+        ArrayList<Funcionario> funcionarios = new ArrayList<>();
+        funcionarios.add(maria);
+        funcionarios.add(joao);
+        funcionarios.add(alice);
+
+        FuncionarioRepositoryImpl repository = new FuncionarioRepositoryImpl(funcionarios);
+
+        assertThat(repository.listarFuncionariosOrdenadosPorNome())
+                .containsExactly(alice, joao, maria);
+    }
+
+    @Test
+    public void deveColocarFuncionariosComNomeNuloNoFinalAoOrdenarPorNome() {
+        Funcionario maria = new Funcionario("Maria", LocalDate.of(2000, 10, 18), BigDecimal.valueOf(2009.44), "Operador");
+        Funcionario semNome = new Funcionario(null, LocalDate.of(1990, 5, 12), BigDecimal.valueOf(2284.38), "Operador");
+        Funcionario alice = new Funcionario("Alice", LocalDate.of(1995, 1, 5), BigDecimal.valueOf(2234.68), "Recepcionista");
+
+        ArrayList<Funcionario> funcionarios = new ArrayList<>();
+        funcionarios.add(maria);
+        funcionarios.add(semNome);
+        funcionarios.add(alice);
+
+        FuncionarioRepositoryImpl repository = new FuncionarioRepositoryImpl(funcionarios);
+
+        assertThat(repository.listarFuncionariosOrdenadosPorNome())
+                .containsExactly(alice, maria, semNome);
+    }
+
+    @Test
+    public void deveManterFuncionarioNuloNoFinalAoOrdenarPorNome() {
+        Funcionario maria = new Funcionario("Maria", LocalDate.of(2000, 10, 18), BigDecimal.valueOf(2009.44), "Operador");
+        Funcionario joao = new Funcionario("João", LocalDate.of(1990, 5, 12), BigDecimal.valueOf(2284.38), "Operador");
+
+        ArrayList<Funcionario> funcionarios = new ArrayList<>();
+        funcionarios.add(maria);
+        funcionarios.add(null);
+        funcionarios.add(joao);
+
+        FuncionarioRepositoryImpl repository = new FuncionarioRepositoryImpl(funcionarios);
+
+        assertThat(repository.listarFuncionariosOrdenadosPorNome())
+                .containsExactly(joao, maria, null);
+    }
+
 }
