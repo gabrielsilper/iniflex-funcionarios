@@ -28,12 +28,6 @@ public class FuncionarioService {
         funcionarioRepository.removerFuncionarioPorNome(nome);
     }
 
-    public void imprimirFuncionarios() {
-        System.out.println("Lista de funcionários:");
-        this.listarFuncionarios().forEach(this::imprimirFuncionario);
-        System.out.println("\n");
-    }
-
     public void aumentarSalarioFuncionarios(int percentual) {
         if (percentual < 0) {
             System.out.println("Percentual inválido. Por favor, insira um valor maior que 0.");
@@ -42,26 +36,8 @@ public class FuncionarioService {
         funcionarioRepository.aumentarSalarioFuncionarios(percentual);
     }
 
-    public void imprimirFuncionarioPorFuncao() {
-        Map<String, List<Funcionario>> funcionariosPorFuncao = this.funcionarioRepository.listarFuncionariosPorFuncao();
-
-        System.out.println("Lista de funcionários por função:");
-        for (Map.Entry<String, List<Funcionario>> entry : funcionariosPorFuncao.entrySet()) {
-            System.out.println("Função - " + entry.getKey() + ":");
-            entry.getValue().forEach(this::imprimirFuncionario);
-            System.out.println("----------------------------");
-        }
-        System.out.println("\n");
-    }
-
     public List<Funcionario> listarFuncionariosPorMesesAniversaio(int... meses) {
         return this.funcionarioRepository.listarFuncionariosPorMesAniversario(meses);
-    }
-
-    public void imprimirFuncionariosPorMesesAniversario(int... meses) {
-        System.out.println("Funcionários que fazem aniversário no mês " + Arrays.toString(meses) + ":");
-        this.listarFuncionariosPorMesesAniversaio(meses).forEach(this::imprimirFuncionario);
-        System.out.println("\n");
     }
 
     public NomeIdadeFuncionarioDTO getNomeIdadeFuncionarioMaisVelho() {
@@ -77,6 +53,30 @@ public class FuncionarioService {
         int idade = Period.between(funcionarioMaisVelho.getDataNascimento(), LocalDate.now()).getYears();
 
         return new NomeIdadeFuncionarioDTO(funcionarioMaisVelho.getNome(), idade);
+    }
+
+    public void imprimirFuncionariosPorMesesAniversario(int... meses) {
+        System.out.println("Funcionários que fazem aniversário no mês " + Arrays.toString(meses) + ":");
+        this.listarFuncionariosPorMesesAniversaio(meses).forEach(this::imprimirFuncionario);
+        System.out.println("\n");
+    }
+
+    public void imprimirFuncionarios() {
+        System.out.println("Lista de funcionários:");
+        this.listarFuncionarios().forEach(this::imprimirFuncionario);
+        System.out.println("\n");
+    }
+
+    public void imprimirFuncionarioPorFuncao() {
+        Map<String, List<Funcionario>> funcionariosPorFuncao = this.funcionarioRepository.listarFuncionariosPorFuncao();
+
+        System.out.println("Lista de funcionários por função:");
+        for (Map.Entry<String, List<Funcionario>> entry : funcionariosPorFuncao.entrySet()) {
+            System.out.println("Função - " + entry.getKey() + ":");
+            entry.getValue().forEach(this::imprimirFuncionario);
+            System.out.println("----------------------------");
+        }
+        System.out.println("\n");
     }
 
     public void imprimirFuncionarioMaisVelho() {
