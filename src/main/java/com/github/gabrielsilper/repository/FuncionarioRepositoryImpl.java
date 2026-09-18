@@ -59,4 +59,17 @@ public class FuncionarioRepositoryImpl implements FuncionarioRepository {
             funcionario.setSalario(novoSalario);
         });
     }
+
+    @Override
+    public List<Funcionario> listarFuncionariosPorMesAniversario(int... meses) {
+        return this.funcionarios.stream().filter(funcionario -> {
+            int mesAniversario = funcionario.getDataNascimento().getMonthValue();
+            for (int mes : meses) {
+                if (mes == mesAniversario) {
+                    return true;
+                }
+            }
+            return false;
+        }).toList();
+    }
 }

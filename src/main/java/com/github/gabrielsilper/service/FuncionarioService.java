@@ -32,7 +32,7 @@ public class FuncionarioService {
     }
 
     public void aumentarSalarioFuncionarios(int percentual) {
-        if (percentual < 0){
+        if (percentual < 0) {
             System.out.println("Percentual inválido. Por favor, insira um valor maior que 0.");
         }
 
@@ -48,6 +48,12 @@ public class FuncionarioService {
             entry.getValue().forEach(this::imprimirFuncionario);
             System.out.println("----------------------------");
         }
+        System.out.println("\n");
+    }
+
+    public void imprimirFuncionariosPorMesesAniversario(int... meses) {
+        System.out.println("Funcionários que fazem aniversário no mês " + Arrays.toString(meses) + ":");
+        this.funcionarioRepository.listarFuncionariosPorMesAniversario(meses).forEach(this::imprimirFuncionario);
         System.out.println("\n");
     }
 

@@ -24,5 +24,8 @@ public class Main {
         // 3.5 – Agrupar os funcionários por função em um MAP, sendo a chave a “função” e o valor a “lista de funcionários”.
         // 3.6 – Imprimir os funcionários, agrupados por função.
         funcionarioService.imprimirFuncionarioPorFuncao();
+
+        // 3.8 – Imprimir os funcionários que fazem aniversário no mês 10 e 12.
+        funcionarioService.imprimirFuncionariosPorMesesAniversario(10, 12);
     }
 }

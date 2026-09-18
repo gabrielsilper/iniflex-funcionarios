@@ -10,4 +10,5 @@ public interface FuncionarioRepository {
     Map<String, List<Funcionario>> listarFuncionariosPorFuncao();
     void removerFuncionarioPorNome(String nome);
     void aumentarSalarioFuncionarios(int percentual);
+    List<Funcionario> listarFuncionariosPorMesAniversario(int... meses);
 }
