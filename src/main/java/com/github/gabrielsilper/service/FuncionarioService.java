@@ -33,8 +33,9 @@ public class FuncionarioService {
     }
 
     public void aumentarSalarioFuncionarios(int percentual) {
-        if (percentual < 0) {
+        if (percentual <= 0) {
             System.out.println("Percentual inválido. Por favor, insira um valor maior que 0.");
+            return;
         }
 
         funcionarioRepository.atualizarSalarioFuncionarios(percentual);
