@@ -39,12 +39,18 @@ public class FuncionarioRepositoryImpl implements FuncionarioRepository {
         Map<String, List<Funcionario>> funcionariosPorFuncao = new HashMap<>();
 
         for (Funcionario funcionario : this.listarFuncionarios()) {
-            if (funcionariosPorFuncao.containsKey(funcionario.getFuncao())) {
-                funcionariosPorFuncao.get(funcionario.getFuncao()).add(funcionario);
+            if (funcionario == null) {
+                continue;
+            }
+
+            String chaveFuncao = funcionario.getFuncao() != null ? funcionario.getFuncao() : "Sem cargo";
+
+            if (funcionariosPorFuncao.containsKey(chaveFuncao)) {
+                funcionariosPorFuncao.get(chaveFuncao).add(funcionario);
             } else {
                 List<Funcionario> funcionarios = new ArrayList<>();
                 funcionarios.add(funcionario);
-                funcionariosPorFuncao.put(funcionario.getFuncao(), funcionarios);
+                funcionariosPorFuncao.put(chaveFuncao, funcionarios);
             }
         }
 

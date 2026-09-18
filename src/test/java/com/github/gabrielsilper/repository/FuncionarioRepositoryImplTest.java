@@ -11,6 +11,20 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class FuncionarioRepositoryImplTest {
+    @Test
+    public void deveListarTodosFuncionariosDaListaPadrao() {
+        // Arrange
+        FuncionarioRepositoryImpl repository = new FuncionarioRepositoryImpl();
+
+        // Act
+        List<Funcionario> funcionariosListados = repository.listarFuncionarios();
+
+        // Assert
+        assertThat(funcionariosListados).hasSize(10);
+        assertThat(funcionariosListados.getFirst().getNome()).isEqualTo("Maria");
+        assertThat(funcionariosListados.getLast().getNome()).isEqualTo("Helena");
+    }
+
 
     @Test
     public void deveListarTodosFuncionariosDeUmaLista() {
@@ -295,4 +309,133 @@ public class FuncionarioRepositoryImplTest {
                 .containsExactly(joao, maria, null);
     }
 
+    @Test
+    public void deveRetornarZeroQuandoListaDeFuncionariosEstiverVazia() {
+        FuncionarioRepositoryImpl repository = new FuncionarioRepositoryImpl(new ArrayList<>());
+
+        assertThat(repository.getTotalSalarios()).isZero();
+    }
+
+    @Test
+    public void deveSomarTodosOsSalariosDeFuncionariosValidos() {
+        Funcionario maria = new Funcionario("Maria", LocalDate.of(2000, 10, 18), BigDecimal.valueOf(2009.44), "Operador");
+        Funcionario joao = new Funcionario("João", LocalDate.of(1990, 5, 12), BigDecimal.valueOf(2284.38), "Operador");
+        Funcionario alice = new Funcionario("Alice", LocalDate.of(1995, 1, 5), BigDecimal.valueOf(2234.68), "Recepcionista");
+
+        ArrayList<Funcionario> funcionarios = new ArrayList<>();
+        funcionarios.add(maria);
+        funcionarios.add(joao);
+        funcionarios.add(alice);
+
+        FuncionarioRepositoryImpl repository = new FuncionarioRepositoryImpl(funcionarios);
+
+        assertThat(repository.getTotalSalarios())
+                .isEqualByComparingTo(BigDecimal.valueOf(6528.50));
+    }
+
+    @Test
+    public void deveIgnorarFuncionariosNulosNaSomaTotal() {
+        Funcionario maria = new Funcionario("Maria", LocalDate.of(2000, 10, 18), BigDecimal.valueOf(2009.44), "Operador");
+        Funcionario joao = new Funcionario("João", LocalDate.of(1990, 5, 12), BigDecimal.valueOf(2284.38), "Operador");
+
+        ArrayList<Funcionario> funcionarios = new ArrayList<>();
+        funcionarios.add(maria);
+        funcionarios.add(null);
+        funcionarios.add(joao);
+
+        FuncionarioRepositoryImpl repository = new FuncionarioRepositoryImpl(funcionarios);
+
+        assertThat(repository.getTotalSalarios())
+                .isEqualByComparingTo(BigDecimal.valueOf(4293.82));
+    }
+
+    @Test
+    public void deveIgnorarSalariosNulosNaSomaTotal() {
+        Funcionario maria = new Funcionario("Maria", LocalDate.of(2000, 10, 18), BigDecimal.valueOf(2009.44), "Operador");
+        Funcionario joao = new Funcionario("João", LocalDate.of(1990, 5, 12), null, "Operador");
+
+        ArrayList<Funcionario> funcionarios = new ArrayList<>();
+        funcionarios.add(maria);
+        funcionarios.add(joao);
+
+        FuncionarioRepositoryImpl repository = new FuncionarioRepositoryImpl(funcionarios);
+
+        assertThat(repository.getTotalSalarios())
+                .isEqualByComparingTo(BigDecimal.valueOf(2009.44));
+    }
+
+    @Test
+    public void deveSomarValoresNegativosEZeroSemErro() {
+        Funcionario maria = new Funcionario("Maria", LocalDate.of(2000, 10, 18), BigDecimal.valueOf(-500.00), "Operador");
+        Funcionario joao = new Funcionario("João", LocalDate.of(1990, 5, 12), BigDecimal.valueOf(0), "Operador");
+        Funcionario alice = new Funcionario("Alice", LocalDate.of(1995, 1, 5), BigDecimal.valueOf(250.00), "Recepcionista");
+
+        ArrayList<Funcionario> funcionarios = new ArrayList<>();
+        funcionarios.add(maria);
+        funcionarios.add(joao);
+        funcionarios.add(alice);
+
+        FuncionarioRepositoryImpl repository = new FuncionarioRepositoryImpl(funcionarios);
+
+        assertThat(repository.getTotalSalarios())
+                .isEqualByComparingTo(BigDecimal.valueOf(-250.00));
+    }
+
+    @Test
+    public void deveRetornarMapaVazioQuandoNaoHaFuncionarios() {
+        FuncionarioRepositoryImpl repository = new FuncionarioRepositoryImpl(new ArrayList<>());
+
+        assertThat(repository.listarFuncionariosPorFuncao()).isEmpty();
+    }
+
+    @Test
+    public void deveAgruparFuncionariosPorFuncao() {
+        Funcionario maria = new Funcionario("Maria", LocalDate.of(2000, 10, 18), BigDecimal.valueOf(2009.44), "Operador");
+        Funcionario joao = new Funcionario("João", LocalDate.of(1990, 5, 12), BigDecimal.valueOf(2284.38), "Operador");
+        Funcionario alice = new Funcionario("Alice", LocalDate.of(1995, 1, 5), BigDecimal.valueOf(2234.68), "Recepcionista");
+
+        ArrayList<Funcionario> funcionarios = new ArrayList<>();
+        funcionarios.add(maria);
+        funcionarios.add(joao);
+        funcionarios.add(alice);
+
+        FuncionarioRepositoryImpl repository = new FuncionarioRepositoryImpl(funcionarios);
+
+        assertThat(repository.listarFuncionariosPorFuncao())
+                .containsKeys("Operador", "Recepcionista")
+                .hasSize(2);
+        assertThat(repository.listarFuncionariosPorFuncao().get("Operador"))
+                .containsExactly(maria, joao);
+        assertThat(repository.listarFuncionariosPorFuncao().get("Recepcionista"))
+                .containsExactly(alice);
+    }
+
+    @Test
+    public void deveUsarChaveSemCargoQuandoFuncionarioTemFuncaoNula() {
+        Funcionario maria = new Funcionario("Maria", LocalDate.of(2000, 10, 18), BigDecimal.valueOf(2009.44), null);
+        Funcionario joao = new Funcionario("João", LocalDate.of(1990, 5, 12), BigDecimal.valueOf(2284.38), "Operador");
+
+        ArrayList<Funcionario> funcionarios = new ArrayList<>();
+        funcionarios.add(maria);
+        funcionarios.add(joao);
+
+        FuncionarioRepositoryImpl repository = new FuncionarioRepositoryImpl(funcionarios);
+
+        assertThat(repository.listarFuncionariosPorFuncao()).containsKey("Sem cargo");
+        assertThat(repository.listarFuncionariosPorFuncao().get("Sem cargo")).containsExactly(maria);
+    }
+
+    @Test
+    public void deveIgnorarFuncionarioNuloAoAgruparPorFuncao() {
+        Funcionario maria = new Funcionario("Maria", LocalDate.of(2000, 10, 18), BigDecimal.valueOf(2009.44), "Operador");
+
+        ArrayList<Funcionario> funcionarios = new ArrayList<>();
+        funcionarios.add(maria);
+        funcionarios.add(null);
+
+        FuncionarioRepositoryImpl repository = new FuncionarioRepositoryImpl(funcionarios);
+
+        assertThat(repository.listarFuncionariosPorFuncao()).containsKey("Operador").hasSize(1);
+        assertThat(repository.listarFuncionariosPorFuncao().get("Operador")).containsExactly(maria);
+    }
 }
