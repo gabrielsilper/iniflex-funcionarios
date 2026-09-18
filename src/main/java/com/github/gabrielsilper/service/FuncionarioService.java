@@ -1,10 +1,12 @@
 package com.github.gabrielsilper.service;
 
 import com.github.gabrielsilper.dto.NomeIdadeFuncionarioDTO;
+import com.github.gabrielsilper.dto.NomeSalariosFuncionarioDTO;
 import com.github.gabrielsilper.model.Funcionario;
 import com.github.gabrielsilper.repository.FuncionarioRepository;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.Period;
@@ -12,6 +14,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class FuncionarioService {
+    private static final BigDecimal SALARIO_MINIMO = BigDecimal.valueOf(1212.00);
     private final FuncionarioRepository funcionarioRepository;
     private final DateTimeFormatter dtFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private final Locale brLocale = Locale.of("pt", "BR");
@@ -64,6 +67,20 @@ public class FuncionarioService {
         return this.funcionarioRepository.getTotalSalarios();
     }
 
+    public List<NomeSalariosFuncionarioDTO> listarFuncionariosComSalariosMinimos() {
+        return this.listarFuncionarios().stream().map(funcionario -> {
+            if (funcionario.getSalario() == null) {
+                return new NomeSalariosFuncionarioDTO(funcionario.getNome(), 0);
+            }
+
+            int salariosMinimos = funcionario.getSalario()
+                    .divide(SALARIO_MINIMO, 0, RoundingMode.DOWN)
+                    .intValue();
+
+            return new NomeSalariosFuncionarioDTO(funcionario.getNome(), salariosMinimos);
+        }).toList();
+    }
+
     public void imprimirFuncionariosPorMesesAniversario(int... meses) {
         System.out.println("Funcionários que fazem aniversário no mês " + Arrays.toString(meses) + ":");
         this.listarFuncionariosPorMesesAniversaio(meses).forEach(this::imprimirFuncionario);
@@ -109,6 +126,15 @@ public class FuncionarioService {
     public void imprimirTotalSalarios() {
         System.out.println("Total dos salários dos Funcionários: "
                 + this.numberFormat.format(this.getTotalSalarios()) + "\n");
+    }
+
+    public void imprimirFuncionariosSalariosMinimos() {
+        System.out.println("Funcionários e qtd. salários mínimos que ganha:");
+        this.listarFuncionariosComSalariosMinimos().forEach( nomeSalarios -> {
+            System.out.printf("- Funcionário: %s, Salários Mínimos: %d%n",
+                    nomeSalarios.nome(),
+                    nomeSalarios.salariosMinimos());
+        });
     }
 
     private void imprimirFuncionario(Funcionario funcionario) {
