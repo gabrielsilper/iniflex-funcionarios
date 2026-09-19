@@ -23,14 +23,13 @@ public class FuncionarioService {
         return funcionarioRepository.listarFuncionarios();
     }
 
-    public void removerFuncionarioPorNome(String nome) {
-        funcionarioRepository.removerFuncionarioPorNome(nome);
+    public boolean removerFuncionarioPorNome(String nome) {
+        return funcionarioRepository.removerFuncionarioPorNome(nome);
     }
 
     public void aumentarSalarioFuncionarios(int percentual) {
         if (percentual <= 0) {
-            System.out.println("Percentual inválido. Por favor, insira um valor maior que 0.");
-            return;
+            throw new IllegalArgumentException("Percentual inválido. Por favor, insira um valor maior que 0.");
         }
 
         funcionarioRepository.atualizarSalarioFuncionarios(percentual);

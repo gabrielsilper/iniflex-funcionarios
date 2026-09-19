@@ -67,7 +67,7 @@ public class FuncionarioController {
 
     public void imprimirFuncionariosSalariosMinimos() {
         System.out.println("Funcionários e qtd. salários mínimos que ganha:");
-        this.funcionarioService.listarFuncionariosComSalariosMinimos().forEach( nomeSalarios -> {
+        this.funcionarioService.listarFuncionariosComSalariosMinimos().forEach(nomeSalarios -> {
             System.out.printf("- Funcionário: %s, Salários Mínimos: %d%n",
                     nomeSalarios.nome(),
                     nomeSalarios.salariosMinimos());
@@ -84,12 +84,19 @@ public class FuncionarioController {
     }
 
     public void removerFuncionarioPorNome(String nome) {
-        this.funcionarioService.removerFuncionarioPorNome(nome);
-        System.out.println("Funcionário " + nome + " foi removido com sucesso.\n\n");
+        if (this.funcionarioService.removerFuncionarioPorNome(nome)) {
+            System.out.println("Funcionário " + nome + " foi removido com sucesso.\n\n");
+            return;
+        }
+        System.out.println("Funcionário " + nome + " não encontrado.\n\n");
     }
 
     public void aumentarSalarioFuncionarios(int percentual) {
-        this.funcionarioService.aumentarSalarioFuncionarios(percentual);
-        System.out.println("Salários dos funcionários aumentados em " + percentual + "%.\n\n");
+        try {
+            this.funcionarioService.aumentarSalarioFuncionarios(percentual);
+            System.out.println("Salários dos funcionários aumentados em " + percentual + "%.\n\n");
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage() + "\n\n");
+        }
     }
 }

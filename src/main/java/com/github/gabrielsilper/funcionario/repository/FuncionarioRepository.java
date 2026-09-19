@@ -9,7 +9,7 @@ import java.util.Map;
 public interface FuncionarioRepository {
     List<Funcionario> listarFuncionarios();
     Map<String, List<Funcionario>> listarFuncionariosPorFuncao();
-    void removerFuncionarioPorNome(String nome);
+    boolean removerFuncionarioPorNome(String nome);
     void atualizarSalarioFuncionarios(int percentual);
     List<Funcionario> listarFuncionariosPorMesAniversario(int... meses);
     Funcionario getFuncionarioMaisVelho();

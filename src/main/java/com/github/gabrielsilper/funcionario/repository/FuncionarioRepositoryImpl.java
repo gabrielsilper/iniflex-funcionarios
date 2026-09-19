@@ -58,8 +58,8 @@ public class FuncionarioRepositoryImpl implements FuncionarioRepository {
     }
 
     @Override
-    public void removerFuncionarioPorNome(String nome) {
-        funcionarios.removeIf(funcionario -> funcionario.getNome().equalsIgnoreCase(nome));
+    public boolean removerFuncionarioPorNome(String nome) {
+        return funcionarios.removeIf(funcionario -> funcionario.getNome().equalsIgnoreCase(nome));
     }
 
     @Override
