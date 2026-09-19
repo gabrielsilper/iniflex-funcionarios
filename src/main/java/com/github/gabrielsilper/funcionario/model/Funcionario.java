@@ -1,4 +1,4 @@
-package com.github.gabrielsilper.model;
+package com.github.gabrielsilper.funcionario.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

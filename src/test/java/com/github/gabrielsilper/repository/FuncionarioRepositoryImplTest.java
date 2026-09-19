@@ -1,6 +1,7 @@
 package com.github.gabrielsilper.repository;
 
-import com.github.gabrielsilper.model.Funcionario;
+import com.github.gabrielsilper.funcionario.model.Funcionario;
+import com.github.gabrielsilper.funcionario.repository.FuncionarioRepositoryImpl;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;

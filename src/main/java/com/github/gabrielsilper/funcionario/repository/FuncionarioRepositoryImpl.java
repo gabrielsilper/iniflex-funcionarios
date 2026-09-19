@@ -1,7 +1,7 @@
-package com.github.gabrielsilper.repository;
+package com.github.gabrielsilper.funcionario.repository;
 
-import com.github.gabrielsilper.model.Funcionario;
-import com.github.gabrielsilper.model.Pessoa;
+import com.github.gabrielsilper.funcionario.model.Funcionario;
+import com.github.gabrielsilper.funcionario.model.Pessoa;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
