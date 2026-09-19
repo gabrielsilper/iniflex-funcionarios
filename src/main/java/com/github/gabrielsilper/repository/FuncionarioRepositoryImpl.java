@@ -105,16 +105,14 @@ public class FuncionarioRepositoryImpl implements FuncionarioRepository {
                 continue;
             }
 
-            if (funcionarioMaisVelho.getDataNascimento() == null && funcionario.getDataNascimento() == null) {
-                continue;
-            }
-
             if (funcionarioMaisVelho.getDataNascimento() == null && funcionario.getDataNascimento() != null) {
                 funcionarioMaisVelho = funcionario;
                 continue;
             }
 
-            if (funcionario.getDataNascimento().isBefore(funcionarioMaisVelho.getDataNascimento())) {
+            if (funcionario.getDataNascimento() != null
+                    && funcionario.getDataNascimento().isBefore(funcionarioMaisVelho.getDataNascimento())
+            ) {
                 funcionarioMaisVelho = funcionario;
             }
         }
