@@ -19,7 +19,7 @@ public class FuncionarioController {
 
     public void imprimirFuncionariosPorMesesAniversario(int... meses) {
         System.out.println("Funcionários que fazem aniversário no mês " + Arrays.toString(meses) + ":");
-        this.funcionarioService.listarFuncionariosPorMesesAniversaio(meses).forEach(this::imprimirFuncionario);
+        this.funcionarioService.listarFuncionariosPorMesesAniversario(meses).forEach(this::imprimirFuncionario);
         System.out.println("\n");
     }
 

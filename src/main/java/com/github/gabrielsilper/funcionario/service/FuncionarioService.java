@@ -7,18 +7,13 @@ import com.github.gabrielsilper.funcionario.repository.FuncionarioRepository;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class FuncionarioService {
     private static final BigDecimal SALARIO_MINIMO = BigDecimal.valueOf(1212.00);
     private final FuncionarioRepository funcionarioRepository;
-    private final DateTimeFormatter dtFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    private final Locale brLocale = Locale.of("pt", "BR");
-    private final NumberFormat numberFormat = NumberFormat.getCurrencyInstance(brLocale);
 
     public FuncionarioService(FuncionarioRepository funcionarioRepository) {
         this.funcionarioRepository = funcionarioRepository;
@@ -41,7 +36,7 @@ public class FuncionarioService {
         funcionarioRepository.atualizarSalarioFuncionarios(percentual);
     }
 
-    public List<Funcionario> listarFuncionariosPorMesesAniversaio(int... meses) {
+    public List<Funcionario> listarFuncionariosPorMesesAniversario(int... meses) {
         return this.funcionarioRepository.listarFuncionariosPorMesAniversario(meses);
     }
 
