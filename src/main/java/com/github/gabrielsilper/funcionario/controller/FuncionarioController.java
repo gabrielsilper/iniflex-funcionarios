@@ -62,7 +62,7 @@ public class FuncionarioController {
     public void imprimirTotalSalarios() {
         BigDecimal totalSalarios = this.funcionarioService.getTotalSalarios();
         String totalSalariosStr = FormatterUtils.MOEDA_FORMATTER.format(totalSalarios);
-        System.out.println("Total dos salários dos Funcionários: " + totalSalariosStr + "\n");
+        System.out.println("Total dos salários dos Funcionários: " + totalSalariosStr + "\n\n");
     }
 
     public void imprimirFuncionariosSalariosMinimos() {
@@ -81,5 +81,15 @@ public class FuncionarioController {
                 FormatterUtils.MOEDA_FORMATTER.format(funcionario.getSalario()),
                 funcionario.getFuncao()
         );
+    }
+
+    public void removerFuncionarioPorNome(String nome) {
+        this.funcionarioService.removerFuncionarioPorNome(nome);
+        System.out.println("Funcionário " + nome + " foi removido com sucesso.\n\n");
+    }
+
+    public void aumentarSalarioFuncionarios(int percentual) {
+        this.funcionarioService.aumentarSalarioFuncionarios(percentual);
+        System.out.println("Salários dos funcionários aumentados em " + percentual + "%.\n\n");
     }
 }

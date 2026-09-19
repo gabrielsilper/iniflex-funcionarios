@@ -13,7 +13,7 @@ public class Main {
         FuncionarioController funcionarioController = new FuncionarioController(funcionarioService);
 
         // 3.2 – Remover o funcionário “João” da lista.
-        funcionarioService.removerFuncionarioPorNome("João");
+        funcionarioController.removerFuncionarioPorNome("João");
 
         // 3.3 - Imprimir todos os funcionários com todas suas informações, sendo que:
         //• informação de data deve ser exibido no formato dd/mm/aaaa;
@@ -21,7 +21,7 @@ public class Main {
         funcionarioController.imprimirFuncionarios();
 
         // 3.4 – Os funcionários receberam 10% de aumento de salário, atualizar a lista de funcionários com novo valor.
-        funcionarioService.aumentarSalarioFuncionarios(10);
+        funcionarioController.aumentarSalarioFuncionarios(10);
 
         // 3.5 – Agrupar os funcionários por função em um MAP, sendo a chave a “função” e o valor a “lista de funcionários”.
         // 3.6 – Imprimir os funcionários, agrupados por função.
