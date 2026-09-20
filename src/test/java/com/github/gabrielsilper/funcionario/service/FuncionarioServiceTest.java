@@ -1,6 +1,7 @@
 package com.github.gabrielsilper.funcionario.service;
 
 import com.github.gabrielsilper.funcionario.dto.NomeIdadeFuncionarioDTO;
+import com.github.gabrielsilper.funcionario.dto.NomeSalariosFuncionarioDTO;
 import com.github.gabrielsilper.funcionario.model.Funcionario;
 import com.github.gabrielsilper.funcionario.repository.FuncionarioRepository;
 import com.github.gabrielsilper.funcionario.repository.FuncionarioRepositoryImpl;
@@ -11,6 +12,7 @@ import java.time.Clock;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -138,5 +140,159 @@ public class FuncionarioServiceTest {
         assertThat(maisVelho.nome()).isEqualTo("Maria");
         assertThat(maisVelho.idade()).isPositive();
         assertThat(maisVelho.idade()).isEqualTo(25);
+    }
+
+    @Test
+    public void deveRetornarSomenteNomeEIdadeNegativaQuandoFuncionarioMaisVelhoNaoTemDataNascimentoValida() {
+        Funcionario maria = new Funcionario(
+                "Maria",
+                null,
+                BigDecimal.valueOf(2009.44),
+                "Operador"
+        );
+
+        FuncionarioRepositoryImpl repository = mock(FuncionarioRepositoryImpl.class);
+
+        when(repository.getFuncionarioMaisVelho()).thenReturn(maria);
+
+        FuncionarioService service = new FuncionarioService(repository);
+        NomeIdadeFuncionarioDTO maisVelho = service.getNomeIdadeFuncionarioMaisVelho();
+
+        verify(repository).getFuncionarioMaisVelho();
+        assertThat(maisVelho).isNotNull();
+        assertThat(maisVelho.nome()).isEqualTo("Maria");
+        assertThat(maisVelho.idade()).isNegative();
+        assertThat(maisVelho.idade()).isEqualTo(-1);
+    }
+
+    @Test
+    public void deveRetornarValorNuloQuandoNaoRetornaFuncionarioMaisVelho() {
+        FuncionarioRepositoryImpl repository = mock(FuncionarioRepositoryImpl.class);
+
+        when(repository.getFuncionarioMaisVelho()).thenReturn(null);
+
+        FuncionarioService service = new FuncionarioService(repository);
+        NomeIdadeFuncionarioDTO maisVelho = service.getNomeIdadeFuncionarioMaisVelho();
+
+        verify(repository).getFuncionarioMaisVelho();
+        assertThat(maisVelho).isNull();
+    }
+
+    @Test
+    public void deveListarFuncionariosPorFuncaoAoConsultarRepository() {
+        Funcionario maria = new Funcionario(
+                "Maria",
+                LocalDate.of(2000, 10, 18),
+                BigDecimal.valueOf(2009.44),
+                "Operador"
+        );
+
+        FuncionarioRepositoryImpl repository = mock(FuncionarioRepositoryImpl.class);
+
+        when(repository.listarFuncionariosPorFuncao()).thenReturn(
+                Map.of("Operador", List.of(maria))
+        );
+
+        FuncionarioService service = new FuncionarioService(repository);
+        var funcionariosPorFuncao = service.listarFuncionariosPorFuncao();
+
+        verify(repository).listarFuncionariosPorFuncao();
+        assertThat(funcionariosPorFuncao).hasSize(1);
+        assertThat(funcionariosPorFuncao.get("Operador")).contains(maria);
+    }
+
+    @Test
+    public void deveListarFuncionariosOrdenadosPorNomeAoConsultarRepository() {
+        Funcionario maria = new Funcionario(
+                "Maria",
+                LocalDate.of(2000, 10, 18),
+                BigDecimal.valueOf(2009.44),
+                "Operador"
+        );
+
+        FuncionarioRepositoryImpl repository = mock(FuncionarioRepositoryImpl.class);
+
+        when(repository.listarFuncionariosOrdenadosPorNome()).thenReturn(List.of(maria));
+
+        FuncionarioService service = new FuncionarioService(repository);
+        var funcionariosOrdenados = service.listarFuncionariosOrdenadosPorNome();
+
+        verify(repository).listarFuncionariosOrdenadosPorNome();
+        assertThat(funcionariosOrdenados).hasSize(1);
+        assertThat(funcionariosOrdenados).contains(maria);
+    }
+
+    @Test
+    public void deveRetornarTotalDeSalariosAoConsultarRepository() {
+        FuncionarioRepositoryImpl repository = mock(FuncionarioRepositoryImpl.class);
+        BigDecimal total = BigDecimal.valueOf(10000.00);
+
+        when(repository.getTotalSalarios()).thenReturn(total);
+
+        FuncionarioService service = new FuncionarioService(repository);
+        var totalSalarios = service.getTotalSalarios();
+
+        verify(repository).getTotalSalarios();
+        assertThat(totalSalarios).isEqualByComparingTo(total);
+    }
+
+    @Test
+    public void deveListarNomeFuncionariosEQtdSalariosMinimosInteirosDeCada() {
+        FuncionarioRepositoryImpl repository = mock(FuncionarioRepositoryImpl.class);
+        Funcionario maria = new Funcionario(
+                "Maria",
+                LocalDate.of(2000, 10, 18),
+                BigDecimal.valueOf(2009.44),
+                "Operador"
+        );
+
+        when(repository.listarFuncionarios()).thenReturn(List.of(maria));
+
+        FuncionarioService service = new FuncionarioService(repository);
+        List<NomeSalariosFuncionarioDTO> funcionarios = service.listarFuncionariosComSalariosMinimos();
+
+        verify(repository).listarFuncionarios();
+        assertThat(funcionarios.getFirst().nome()).isEqualTo("Maria");
+        assertThat(funcionarios.getFirst().salariosMinimos()).isEqualTo(1);
+    }
+
+    @Test
+    public void deveListarNomeFuncionariosEQtdSalariosMinimosZeroQuandoSalarioMenorQueSalarioMinimo() {
+        FuncionarioRepositoryImpl repository = mock(FuncionarioRepositoryImpl.class);
+        Funcionario maria = new Funcionario(
+                "Maria",
+                LocalDate.of(2000, 10, 18),
+                BigDecimal.TEN,
+                "Operador"
+        );
+
+        when(repository.listarFuncionarios()).thenReturn(List.of(maria));
+
+        FuncionarioService service = new FuncionarioService(repository);
+        List<NomeSalariosFuncionarioDTO> funcionarios = service.listarFuncionariosComSalariosMinimos();
+
+        verify(repository).listarFuncionarios();
+        assertThat(funcionarios.getFirst().nome()).isEqualTo("Maria");
+        assertThat(funcionarios.getFirst().salariosMinimos()).isEqualTo(0);
+    }
+
+    @Test
+    public void deveListarNomeFuncionariosEQtdSalariosMinimosZeroQuandoSalarioNulo() {
+        FuncionarioRepositoryImpl repository = mock(FuncionarioRepositoryImpl.class);
+        Funcionario maria = new Funcionario(
+                "Maria",
+                LocalDate.of(2000, 10, 18),
+                null,
+                "Operador"
+        );
+
+        when(repository.listarFuncionarios()).thenReturn(List.of(maria));
+
+        FuncionarioService service = new FuncionarioService(repository);
+        List<NomeSalariosFuncionarioDTO> funcionarios = service.listarFuncionariosComSalariosMinimos();
+
+        verify(repository).listarFuncionarios();
+        assertThat(funcionarios.getFirst().nome()).isEqualTo("Maria");
+        assertThat(funcionarios.getFirst().salariosMinimos()).isEqualTo(0);
     }
 }
