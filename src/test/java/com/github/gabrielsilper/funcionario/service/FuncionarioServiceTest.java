@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 public class FuncionarioServiceTest {
@@ -34,21 +35,25 @@ public class FuncionarioServiceTest {
     }
 
     @Test
-    public void naoDeveChamarRepositorioQuandoPercentualForZero() {
+    public void deveLancarErroNaoDeveChamarRepositorioQuandoPercentualForZero() {
         FuncionarioRepository repository = mock(FuncionarioRepository.class);
         FuncionarioService service = new FuncionarioService(repository);
 
-        service.aumentarSalarioFuncionarios(0);
+        assertThatThrownBy(() -> service.aumentarSalarioFuncionarios(0))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Percentual inválido. Por favor, insira um valor maior que 0.");
 
         verify(repository, never()).atualizarSalarioFuncionarios(0);
     }
 
     @Test
-    public void naoDeveChamarRepositorioQuandoPercentualForNegativo() {
+    public void deveLancarErroNaoDeveChamarRepositorioQuandoPercentualForNegativo() {
         FuncionarioRepository repository = mock(FuncionarioRepository.class);
         FuncionarioService service = new FuncionarioService(repository);
 
-        service.aumentarSalarioFuncionarios(-10);
+        assertThatThrownBy(() -> service.aumentarSalarioFuncionarios(-10))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Percentual inválido. Por favor, insira um valor maior que 0.");
 
         verify(repository, never()).atualizarSalarioFuncionarios(-10);
     }
