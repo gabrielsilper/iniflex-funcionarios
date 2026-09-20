@@ -7,6 +7,7 @@ import com.github.gabrielsilper.funcionario.repository.FuncionarioRepository;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.*;
@@ -14,9 +15,18 @@ import java.util.*;
 public class FuncionarioService {
     private static final BigDecimal SALARIO_MINIMO = BigDecimal.valueOf(1212.00);
     private final FuncionarioRepository funcionarioRepository;
+    private final Clock clock;
 
     public FuncionarioService(FuncionarioRepository funcionarioRepository) {
+        this(funcionarioRepository, Clock.systemDefaultZone());
+    }
+
+    public FuncionarioService(
+            FuncionarioRepository funcionarioRepository,
+            Clock clock
+    ) {
         this.funcionarioRepository = funcionarioRepository;
+        this.clock = clock;
     }
 
     public List<Funcionario> listarFuncionarios() {
@@ -49,7 +59,7 @@ public class FuncionarioService {
             return new NomeIdadeFuncionarioDTO(funcionarioMaisVelho.getNome(), -1);
         }
 
-        int idade = Period.between(funcionarioMaisVelho.getDataNascimento(), LocalDate.now()).getYears();
+        int idade = Period.between(funcionarioMaisVelho.getDataNascimento(), LocalDate.now(clock)).getYears();
 
         return new NomeIdadeFuncionarioDTO(funcionarioMaisVelho.getNome(), idade);
     }
